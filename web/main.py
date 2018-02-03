@@ -3,7 +3,6 @@ from bokeh.plotting import figure, output_file, save
 import os, sqlite3
 from face_detection import recognize, upload
 from monitor import build_response
-
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
@@ -34,66 +33,37 @@ def bokeh_line():
 
 @app.route("/thing2")
 def thing2():
-	import datetime
-	from io import BytesIO
-	import random
+	from bokeh.io import output_file
+	from bokeh.models import ColumnDataSource
+	from bokeh.palettes import Spectral5
+	from bokeh.plotting import figure
+	from bokeh.sampledata.autompg import autompg as df
+	from bokeh.transform import factor_cmap
 
-	from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-	from matplotlib.figure import Figure
-	from matplotlib.dates import DateFormatter
+	output_file("templates/lines.html")
 
-	import matplotlib.pyplot as plt
+	df.cyl = df.cyl.astype(str)
+	group = df.groupby('cyl')
 
-	# create data
-	names = 'groupA', 'groupB', 'groupC', 'groupD',
-	size = [12, 11, 3, 30]
+	source = ColumnDataSource(group)
+	cyl_cmap = factor_cmap('cyl', palette=Spectral5, factors=sorted(df.cyl.unique()))
 
-	# Create a circle for the center of the plot
-	my_circle = plt.Circle((0, 0), 0.7, color='white')
+	p = figure(plot_height=350, x_range=group, title="MPG by # Cylinders", toolbar_location=None, tools="")
+	p.vbar(x='cyl', top='mpg_mean', width=1, source=source, line_color=cyl_cmap, fill_color=cyl_cmap)
 
-	# Give color names
-	plt.pie(size, labels=names, colors=['red', 'green', 'blue', 'skyblue'])
-	p = plt.gcf()
-	p.gca().add_artist(my_circle)
-	plt.show()
+	p.y_range.start = 0
+	p.xgrid.grid_line_color = None
+	p.xaxis.axis_label = "some stuff"
+	p.xaxis.major_label_orientation = 1.2
+	p.outline_line_color = None
 
-	# Custom colors --> colors will cycle
-	plt.pie(size, labels=names, colors=['red', 'green'])
-	p = plt.gcf()
-	p.gca().add_artist(my_circle)
-	plt.show()
-
-	from palettable.colorbrewer.qualitative import Pastel1_7
-	plt.pie(size, labels=names, colors=Pastel1_7.hex_colors)
-	p = plt.gcf()
-	p.gca().add_artist(my_circle)
-	plt.savefig()
-
-	fig = Figure()
-	ax = fig.add_subplot(111)
-	x = []
-	y = []
-	now = datetime.datetime.now()
-	delta = datetime.timedelta(days=1)
-	for i in range(10):
-		x.append(now)
-		now += delta
-		y.append(random.randint(0, 1000))
-	ax.plot_date(x, y, '-')
-	ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
-	fig.autofmt_xdate()
-	canvas = FigureCanvas(fig)
-	png_output = BytesIO()
-	canvas.print_png(png_output)
-	response = make_response(png_output.getvalue())
-	response.headers['Content-Type'] = 'image/png'
-
-	return response
+	save(p)
+	return render_template("bokeh_line.html")
 
 
 @app.route("/d3_sam")
 def d3_sam():
-	return render_template("d3_sam.html")
+	return render_template("d3_sam.html")#, stars=Monitor.reactionClass())
 
 @app.route('/recognize', methods=['POST'])
 def recon():

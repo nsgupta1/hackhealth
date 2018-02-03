@@ -3,7 +3,7 @@ import json
 import base64
 '5359cde8ad'
 emotions_headers = {'Ocp-Apim-Subscription-Key': '335dea58b93d4876a1fc177e71efdf2a'}
-imgur_headers= {'Authorization': 'Bearer 988e6611d2eb4f9eb6584726553244666cc3f06c'}
+imgur_headers= {'Authorization': 'Bearer a6383d4d13fd540aa7aff71f5e23f7bd7ce9ffca'}
 
 
 def recognize(url):
