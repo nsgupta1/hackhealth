@@ -23,7 +23,7 @@ def max_attribute(item):
                 emotion = 'neutral'
     return emotion
     
-def main():
+def reactionClass():
     
     emoList = []
     for item in json_data['scores']:
@@ -35,10 +35,25 @@ def main():
         else:
             hash_map[word] = 1
 	length = len(emoList)
+	for key, value in sorted(hash_map.iteritems(), key=lambda (k,v): (v,k)):
+		value/length
+		if key=='happiness'
+			if value >= 0.8 
+				star = 5
+			elif value >= 0.7
+				star = 4
+			elif value >= 0.5
+				star = 3
+			elif val >=0.2
+				star = 2
+			else:
+				star = 1
 	with open('dict.csv', 'wb') as csv_file:
     writer = csv.writer(csv_file)
     for key, value in hash_map.items():
        writer.writerow([key, value])
+	return star
+	
         
 
             
