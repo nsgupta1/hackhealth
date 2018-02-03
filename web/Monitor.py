@@ -31,15 +31,17 @@ def reactionClass():
 		hash_map[word] = hash_map[word] + 1 if word in hash_map else 1
 
 	star = 1
-	for key, value in sorted(hash_map.iteritems(), key=lambda O: (O['v'], O('k'))):
-		if key == 'happiness':
-			if value >= 0.8:
+	for key, value in hash_map.items()
+		value/length
+	neutral = hash_map.get("neutral");
+		if key == 'happiness': 
+			if value >= 0.8 or neutral > 0.7:
 				star = 5
-			elif value >= 0.7:
+			elif value >= 0.7 or neutral > 0.5:
 				star = 4
-			elif value >= 0.5:
+			elif value >= 0.5 or neutral > 0.4:
 				star = 3
-			elif value >= 0.2:
+			elif value >= 0.2 or neutral > 0.3:
 				star = 2
 
 	# with open('dict.csv', 'wb') as csv_file:
