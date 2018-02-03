@@ -13,4 +13,28 @@
             <h1>{{ name }}</h1>
          </div>
      </div>
+<video id="video" width="640" height="480" autoplay></video>
+<button id="snap">Snap Photo</button>
+<canvas id="canvas" width="640" height="480"></canvas>
+<script>
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+// Get access to the camera!
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // Not adding `{ audio: true }` since we only want video now
+    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+        video.src = window.URL.createObjectURL(stream);
+        video.play();
+    });
+    
+    setInterval(function(){
+        var data = canvas.toDataURL('image/jpeg', 1.0);
+        data = { image:data }
+        $.post('http://localhost:5000/recognize',data,function(res){
+               console.log(res.data); 
+            });
+    },1000);
+}
+
+</script>
 {% endblock %}
