@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from bokeh.plotting import figure, output_file, save
-# from . import Monitor
+import Monitor
 import os
 
 app = Flask(__name__)
@@ -63,7 +63,7 @@ def thing2():
 
 @app.route("/d3_sam")
 def d3_sam():
-	return render_template("d3_sam.html")#, stars=Monitor.reactionClass())
+	return render_template("d3_sam.html", stars=Monitor.reactionClass())
 
 
 if __name__ == "__main__":
