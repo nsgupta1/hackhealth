@@ -1,7 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response, request, jsonify
 from bokeh.plotting import figure, output_file, save
-import Monitor
+
 import os
+from face_detection import recognize, upload
+from monitor import build_response
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
@@ -63,7 +65,16 @@ def thing2():
 
 @app.route("/d3_sam")
 def d3_sam():
-	return render_template("d3_sam.html", stars=Monitor.reactionClass())
+	return render_template("d3_sam.html", stars=4)		# build_response())
+
+
+@app.route('/recognize', methods=['POST'])
+def recon():
+	image = request.form['image']
+	url = upload(image)
+	data = recognize(url)
+	res = build_response(data)
+	return jsonify(res)
 
 
 if __name__ == "__main__":

@@ -12,13 +12,12 @@ def recognize(url):
     return res
 
 def upload(file):
-    image = base64.b64encode(file.read())
-    string = image.decode('utf8')
-    res= requests.post('https://api.imgur.com/3/image',json={'image':string}, headers=imgur_headers)
+    res= requests.post('https://api.imgur.com/3/image',json={'image':file}, headers=imgur_headers)
     url = json.loads(str(res.content,'utf-8'))
     return url['data']['link']
 
-with open('img.jpg','rb') as f:
-    res = upload(f)
-    data = recognize(res)
-    print(data)
+if __name__ == '__main__':
+    with open('img.jpg','rb') as f:
+        res = upload(f)
+        data = recognize(res)
+        print(data)
