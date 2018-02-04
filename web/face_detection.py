@@ -12,7 +12,9 @@ def recognize(url):
     return res
 
 def upload(file):
-    res= requests.post('https://api.imgur.com/3/image',json={'image':file}, headers=imgur_headers)
+    image = base64.b64encode(file.read())
+    string = image.decode('utf-8')
+    res= requests.post('https://api.imgur.com/3/image',json={'image':string}, headers=imgur_headers)
     url = json.loads(str(res.content,'utf-8'))
     return url['data']['link']
 

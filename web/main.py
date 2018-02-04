@@ -3,7 +3,7 @@ from bokeh.plotting import figure, output_file, save
 
 import os
 from face_detection import recognize, upload
-from monitor import build_response
+from monitor import reactionClass
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
@@ -73,7 +73,7 @@ def recon():
 	image = request.form['image']
 	url = upload(image)
 	data = recognize(url)
-	res = build_response(data)
+	res = reactionClass(data)
 	return jsonify(res)
 
 
